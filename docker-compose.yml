@@ -1,0 +1,36 @@
+version: '3.4'
+
+services:
+  frontend:
+    image: ${DOCKER_REGISTRY-}frontend
+    container_name: front_wdc
+    build:
+      context: .
+      dockerfile: Frontend\Dockerfile
+    ports:
+      - 8181:80
+    depends_on:
+      - backend
+
+  backend:
+    image: ${DOCKER_REGISTRY-}backend
+    container_name: back_wdc
+    build:
+      context: .
+      dockerfile: Backend\Dockerfile
+    ports:
+      - 8182:80
+    depends_on:
+      - postgres
+
+  postgres:
+    image: stellirin/postgres-windows
+    container_name: postgres_wdc
+    restart: always
+    env_file: 
+      - Config\postgresql.conf
+    #environment: 
+    #  - POSTGRES_USER=user
+    #  - POSTGRES_PASSWORD=user123
+    ports:
+      - 5432:5432
